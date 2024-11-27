@@ -1,0 +1,9 @@
+name: XPShop
+version: '${project.version}'
+main: com.github.pluginsell.xpshop.Main
+authors: [EggZackley]
+description: Add items to an XP Shop for a specified XP cost.
+website: https://discord.gg/w7ZGPXGpaX
+commands:
+  xpshop:
+    usage: /<command>
