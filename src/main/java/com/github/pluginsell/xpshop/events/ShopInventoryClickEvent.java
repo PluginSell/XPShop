@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -21,12 +22,16 @@ public class ShopInventoryClickEvent implements Listener {
         try {
             if (e.getView().getTopInventory().getTitle().equalsIgnoreCase(ExpShopInventory.xpInv(false).getTitle())) {
                 e.setCancelled(true);
-                addItem((Player) e.getWhoClicked(), e.getInventory().getItem(e.getSlot()));
+                if (!e.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
+                    addItem((Player) e.getWhoClicked(), e.getClickedInventory().getItem(e.getSlot()));
+                }
             } else if (e.getView().getTopInventory().getTitle().equalsIgnoreCase(ExpShopInventory.xpInv(true).getTitle())) {
                 e.setCancelled(true);
-                removeItem((Player) e.getWhoClicked(), e.getInventory().getItem(e.getSlot()));
+                if (!e.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
+                    removeItem((Player) e.getWhoClicked(), e.getClickedInventory().getItem(e.getSlot()));
+                }
             }
-        } catch (NullPointerException err) {
+        } catch (NullPointerException ignored) {
         }
     }
 
