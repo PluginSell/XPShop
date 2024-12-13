@@ -16,6 +16,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.pluginsell.xpshop.utils.ExperienceManager.*;
+
 public class ShopInventoryClickEvent implements Listener {
     @EventHandler
     void onInventoryClickEvent(InventoryClickEvent e) {
@@ -57,7 +59,8 @@ public class ShopInventoryClickEvent implements Listener {
     private void addItem(Player player, ItemStack item) {
         if (item.getItemMeta().hasLore()) {
             List<String> lores = new ArrayList<>(item.getItemMeta().getLore());
-            int cost = 0;
+            int cost;
+            int xp = getExp(player);
             if (!lores.isEmpty()) {
                 for (String lore : item.getItemMeta().getLore()) {
                     if (lore.contains("Cost:")) {
@@ -67,10 +70,13 @@ public class ShopInventoryClickEvent implements Listener {
                         meta.setLore(lores);
                         item.setItemMeta(meta);
                         cost = Integer.parseInt(ChatColor.stripColor(lore.replaceAll(Main.color("&6Cost: "), "").replaceAll(Main.color(" XP"), "")));
-                        if (cost <= player.getTotalExperience()) {
+                        if (cost <= xp) {
                             if (player.getInventory().firstEmpty() != -1) {
                                 player.sendMessage(Main.prefix + Main.color("&aYou have purchased an item from the shop."));
-                                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "xp set " + player.getName() + " " + (player.getTotalExperience() - cost));
+                                xp = xp - cost;
+                                player.setLevel(0);
+                                player.setExp(0);
+                                changeExp(player, xp);
                                 player.getInventory().addItem(item);
                             } else {
                                 player.sendMessage(Main.prefix + Main.color("&cThat player's inventory is full."));
