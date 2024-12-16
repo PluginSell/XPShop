@@ -33,7 +33,7 @@ public class ShopInventoryClickEvent implements Listener {
                     removeItem((Player) e.getWhoClicked(), e.getClickedInventory().getItem(e.getSlot()));
                 }
             }
-        } catch (NullPointerException ignored) {
+        } catch (NullPointerException | ArrayIndexOutOfBoundsException ignored) {
         }
     }
 
